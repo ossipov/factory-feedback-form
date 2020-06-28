@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests\FeedbackFormRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('feedback');
+});
+
+Route::post('/', function(FeedbackFormRequest $form) {
+    return $form->persist();
 });
