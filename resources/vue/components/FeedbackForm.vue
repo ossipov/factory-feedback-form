@@ -92,9 +92,17 @@
                     .catch( error => {
                         if (error.response) {
 
-                            if( error.response.status === 500 ) {
+                            if (error.response.status === 500)
+                            {
                                 this.error.message = 'Server Error 🤷 '
-                            } else {
+                            }
+                            else if (error.response.status === 419 )
+                            {
+                                this.error.message = 'Please copy feedback text and refresh the page. CSRF Token Mismatch.'
+                                this.loading = false
+                            }
+                            else
+                            {
                                 this.error = error.response.data.errors
                                 this.error.message = error.response.data.message
                             }
