@@ -23,8 +23,12 @@ class FeedbackFormRequest extends FormRequest
      * @throws \Exception
      */
     public function persist() {
+        $data = $this->only(['name', 'email', 'feedback']);
+
         $file = StoreDataFactory::in(env('FEEDBACK_STORAGE_PROVIDER', 'File'));
-        return response()->json($file::save());
+        $result = $file::save($data);
+
+        return response()->json($result);
     }
 
     /**
