@@ -1,5 +1,6 @@
 <template>
-    <form action="/" @submit.prevent="submit" method="post">
+    <form action="/" @submit.prevent="submit" method="post" :class="{ 'submitted' : submitted }">
+        <div class="form-front" >
         <span
             class="error inline bg-red-100 p-3 rounded"
             v-if="error.message"
@@ -13,7 +14,7 @@
             placeholder="Name"
             type="text"
             required
-            :class="error.name?'error':''"
+            :class="{ 'error' : error.name }"
             :disabled="loading"
             @input="error.name=false"
         ><span class="error" v-if="error.name"> — {{error.name.join(', ')}}</span>
@@ -24,7 +25,7 @@
             placeholder="E-Mail"
             type="email"
             required
-            :class="error.email?'error':''"
+            :class="{ 'error' : error.email }"
             :disabled="loading"
             @input="error.email=false"
         ><span class="error" v-if="error.email"> — {{error.email.join(', ')}}</span>
@@ -35,7 +36,7 @@
             cols="30"
             rows="10"
             required
-            :class="error.feedback?'error':''"
+            :class="{ 'error' : error.feedback }"
             :disabled="loading"
             @input="error.feedback=false"
         ></textarea><span class="error" v-if="error.feedback"> — {{error.feedback.join(', ')}}</span>
@@ -43,6 +44,12 @@
         <button type="submit" :disabled="loading">Submit</button>
 
         <Loading v-if="loading" />
+        </div>
+        <div class="form-back">
+            <div class="text-6xl pb-10">👍</div>
+            <span class="text-4xl">Your voice will be heard!</span><br>
+            <span class="text-2xl">Thanks for taking time to reach us.</span>
+        </div>
     </form>
 </template>
 
@@ -52,6 +59,7 @@
     export default {
         data() {
             return {
+                submitted: false,
                 name: '',
                 email: '',
                 feedback: '',
@@ -79,8 +87,7 @@
                     })
                     .then( response => {
                         console.log(response)
-                        this.loading = false
-
+                        this.submitted = true
                     })
                     .catch( error => {
                         if (error.response) {
@@ -101,7 +108,33 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+    form {
+        position: relative;
+    }
+    .form-front, .form-back {
+        transition: transform 0.7s cubic-bezier(.4,.2,.2,1);
+        transform-origin: center;
+    }
+    .form-front {
+        transform: scale(1);
+    }
+    .form-back {
+        @apply absolute inset-0 bg-white ;
+        text-align: center;
+        padding-top: 10%;
+        transform: scale(0);
+    }
+    .submitted {
+        .form-front {
+            transform: scale(0);
+        }
+        .form-back {
+            transform: scale(1);
+        }
+    }
+
     input, textarea {
         @apply relative outline-none border border-gray-400 rounded py-4 px-3 w-full bg-white text-base text-gray-700 mb-3;
     }
